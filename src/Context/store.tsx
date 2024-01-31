@@ -1,7 +1,6 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import axios from 'axios';
 
 interface ContextProps {
   originInputRoad: string;
