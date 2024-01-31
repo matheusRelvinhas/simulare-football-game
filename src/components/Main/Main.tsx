@@ -5,7 +5,7 @@ import './Main.css';
 
 const Main: React.FC = () => {
   const {
-    originInputRoad,
+    dataCss,
   } = useGlobalContext();
 
   return (
