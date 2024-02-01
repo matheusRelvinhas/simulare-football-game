@@ -19,6 +19,7 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   font-family: 'Montserrat','Roboto';
+  color: #1f1f1f;
 }
 
 a {

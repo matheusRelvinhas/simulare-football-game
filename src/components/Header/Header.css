@@ -27,6 +27,7 @@
   color: #f0f0f0;
   transition: transform 0.3s ease-out;
   overflow: auto;
+  z-index: 998;
 }
 
 .tab-up-container {
@@ -49,7 +50,7 @@
 
 /*------ Settings ------*/
 .container {
-  --color: #a5a5b0;
+  --color: #d9d9d9;
   --size: 40px;
   display: flex;
   justify-content: center;
@@ -150,25 +151,6 @@
   transition: opacity 0.3s;
 }
 
-@media (max-width: 550px) {
-  .tab-up {
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .tab-up-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    margin-top: 20px;
-  }
-
-  .tab-up-team-div figure img {
-    width: 175px;
-    height: 175px;
-  }
-}
-
 /*bg*/
 /*txt*/
 /*success*/
@@ -258,6 +240,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
+  font-weight: 900;
 }
 
 .buttons button p:before, .buttons button p:after {
@@ -344,4 +327,23 @@
 
 .buttons button:focus {
   outline: 0;
+}
+
+@media (max-width: 550px) {
+  .tab-up {
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .tab-up-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+
+  .tab-up-team-div figure img {
+    width: 175px;
+    height: 175px;
+  }
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useGlobalContext } from '@/Context/store';
-import { useEffect, useState } from 'react';
 import './Header.css';
 
 const Header: React.FC = () => {
