@@ -86,6 +86,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    const storedOrangeTeam = localStorage.getItem('orangeTeam') || '';
+    const storedBlueTeam = localStorage.getItem('blueTeam') || '';
+    setInputOrange(storedOrangeTeam);
+    setInputBlue(storedBlueTeam);
+  }, []);
+
   return (
     <GlobalContext.Provider
       value={{

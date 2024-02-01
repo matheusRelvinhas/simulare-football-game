@@ -14,6 +14,12 @@ const Header: React.FC = () => {
     setInputBlue,
   } = useGlobalContext();
 
+  const getReady = async () => {
+    localStorage.setItem('orangeTeam', inputOrange);
+    localStorage.setItem('blueTeam', inputBlue);
+    setMenuOpen(false);
+  }
+
   return (
     <>
       <header className="header">
@@ -75,7 +81,7 @@ const Header: React.FC = () => {
           </div>
         </div>
         <div className="buttons">
-          <button className="btn" onClick={() => setMenuOpen(false)}>
+          <button className="btn" onClick={getReady}>
             <span></span>
             <p data-start="Good Luck!" data-text="GO!" data-title="Ready?"></p>
           </button>

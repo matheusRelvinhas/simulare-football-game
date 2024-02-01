@@ -1,11 +1,14 @@
 'use client';
 
 import { useGlobalContext } from '@/Context/store';
+import React, {
+  FormEvent,
+} from 'react';
 import './Main.css';
 
 const Main: React.FC = () => {
   const { dataCss, inputOrange, inputBlue, teams } = useGlobalContext();
-
+  
   return (
     <main className="main">
       <span className="main-span">{'0     -     0'}</span>
