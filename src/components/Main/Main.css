@@ -233,3 +233,15 @@
     margin: 20px;
   }
 }
+
+@media (max-height: 700px) {
+  .main {
+    padding-top: 30vh;
+  }
+}
+
+@media (max-height: 450px) {
+  .main {
+    padding-top: 50vh;
+  }
+}

@@ -7,7 +7,7 @@ import React, {
 import './Main.css';
 
 const Main: React.FC = () => {
-  const { dataCss, inputOrange, inputBlue, teams } = useGlobalContext();
+  const { dataCss, inputOrange, inputBlue, teams, handleSimulateGame } = useGlobalContext();
   
   return (
     <main className="main">
@@ -89,7 +89,7 @@ const Main: React.FC = () => {
           </div>
         </div>
       </div>
-      <button className="btn-conteiner">
+      <button className="btn-conteiner" onClick={handleSimulateGame}>
         <a className="btn-content">
           <span className="btn-title">PLAY</span>
           <span className="icon-arrow">
@@ -128,6 +128,7 @@ const Main: React.FC = () => {
           </span>
         </a>
       </button>
+      <span>TOTAL GAMES: 0</span>
     </main>
   );
 };
