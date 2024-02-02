@@ -1,17 +1,29 @@
 'use client';
 
 import { useGlobalContext } from '@/Context/store';
-import React, {
-  FormEvent,
-} from 'react';
+import React, { FormEvent } from 'react';
 import './Main.css';
 
 const Main: React.FC = () => {
-  const { dataCss, inputOrange, inputBlue, teams, handleSimulateGame } = useGlobalContext();
-  
+  const {
+    dataCss,
+    inputOrange,
+    inputBlue,
+    teams,
+    handleSimulateGame,
+    orangeProbability,
+    blueProbability,
+    lastResultOrange,
+    lastResultBlue,
+    isLoading,
+  } = useGlobalContext();
+
   return (
     <main className="main">
-      <span className="main-span">{'0     -     0'}</span>
+      {isLoading && (
+        <div className="loader"></div>
+      )}
+      <span className="main-span">{`${lastResultOrange}     -     ${lastResultBlue}`}</span>
       <div className="card-container">
         <div className="card">
           <div className="first-content">
@@ -27,6 +39,7 @@ const Main: React.FC = () => {
                 />
               </picture>
             </figure>
+            <span>{`${orangeProbability.toFixed(2)}%`}</span>
           </div>
           <div className="second-content">
             <div>
@@ -46,7 +59,7 @@ const Main: React.FC = () => {
               <span>{teams[1]?.draw}</span>
             </div>
             <div>
-              <span>50%</span>
+              <span>{`${orangeProbability.toFixed(2)}%`}</span>
             </div>
           </div>
         </div>
@@ -60,11 +73,12 @@ const Main: React.FC = () => {
                 <img
                   src={dataCss.blueImage}
                   alt="blue-img"
-                  height={'150px'}
-                  width={'150px'}
+                  height={'140px'}
+                  width={'140px'}
                 />
               </picture>
             </figure>
+            <span>{`${blueProbability.toFixed(2)}%`}</span>
           </div>
           <div className="second-content">
             <div>
@@ -84,7 +98,7 @@ const Main: React.FC = () => {
               <span>{teams[0]?.draw}</span>
             </div>
             <div>
-              <span>50%</span>
+              <span>{`${blueProbability.toFixed(2)}%`}</span>
             </div>
           </div>
         </div>
@@ -128,7 +142,6 @@ const Main: React.FC = () => {
           </span>
         </a>
       </button>
-      <span>TOTAL GAMES: 0</span>
     </main>
   );
 };

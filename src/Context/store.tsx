@@ -1,6 +1,12 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from 'react';
 import { firestore } from '@/assets/firebase';
 
 type Score = {
@@ -33,6 +39,11 @@ interface ContextProps {
     victory: number;
   }[];
   handleSimulateGame: () => void;
+  orangeProbability: number;
+  blueProbability: number;
+  lastResultOrange: number;
+  lastResultBlue: number;
+  isLoading: boolean;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -45,6 +56,11 @@ const GlobalContext = createContext<ContextProps>({
   setInputBlue: () => {},
   teams: [],
   handleSimulateGame: () => {},
+  orangeProbability: 50,
+  blueProbability: 50,
+  lastResultOrange: 0,
+  lastResultBlue: 0,
+  isLoading: false,
 });
 
 type GlobalContextProviderProps = {
@@ -54,7 +70,6 @@ type GlobalContextProviderProps = {
 export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   children,
 }) => {
-
   const dataCss = {
     logoImage: './img/logo.png',
     orangeImage: './img/orange-team.png',
@@ -65,103 +80,95 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [inputOrange, setInputOrange] = useState('Orange Team');
   const [inputBlue, setInputBlue] = useState('Blue Team');
   const [isLoading, setIsLoading] = useState(false);
-  const [erroMessage, setErrorMessage] = useState('Blue Team');
-  const [alert, setAlert] = useState(false);
   const [teams, setTeams] = useState<
-  {
-    id: string;
-    defeat: number;
-    draw: number;
-    goals: number;
-    ownGoals: number;
-    victory: number;
-  }[]
->([]);
+    {
+      id: string;
+      defeat: number;
+      draw: number;
+      goals: number;
+      ownGoals: number;
+      victory: number;
+    }[]
+  >([]);
+  const [orangeProbability, setOrangeProbability] = useState(50);
+  const [blueProbability, setBlueProbability] = useState(50);
+  const [lastResultOrange, setLastResultOrange] = useState(0);
+  const [lastResultBlue, setLastResultBlue] = useState(0);
 
-const simulateFootballGame = (): Score => {
-  // Probabilidade de ocorrer um gol em geral
-  const goalProbability = 0.4;
-  // Probabilidade de ocorrer um gol em um determinado momento do jogo
-  const momentProbability = 0.1;
-  // Gera um número aleatório entre 0 e 1
-  const randomNumber = Math.random();
-  // Simula o placar com base nas probabilidades
-  let orangeTeamScore = 0;
-  let blueTeamScore = 0;
-  for (let minute = 1; minute <= 90; minute++) {
-    // Determina se haverá um gol neste minuto
-    if (Math.random() < momentProbability * goalProbability) {
-      // Decide qual time marcará o gol
-      const scoringTeam = Math.random() < 0.5 ? 'orangeTeam' : 'blueTeam';
-      if (scoringTeam === 'orangeTeam') {
-        orangeTeamScore += 1;
-      } else {
-        blueTeamScore += 1;
+  const simulateFootballGame = (): Score => {
+    // Probabilidade de ocorrer um gol em geral
+    const goalProbability = 0.4;
+    // Probabilidade de ocorrer um gol em um determinado momento do jogo
+    const momentProbability = 0.1;
+    // Gera um número aleatório entre 0 e 1
+    const randomNumber = Math.random();
+    // Simula o placar com base nas probabilidades
+    let orangeTeamScore = 0;
+    let blueTeamScore = 0;
+    for (let minute = 1; minute <= 90; minute++) {
+      // Determina se haverá um gol neste minuto
+      if (Math.random() < momentProbability * goalProbability) {
+        // Decide qual time marcará o gol
+        const scoringTeam = Math.random() < 0.5 ? 'orangeTeam' : 'blueTeam';
+        if (scoringTeam === 'orangeTeam') {
+          orangeTeamScore += 1;
+        } else {
+          blueTeamScore += 1;
+        }
       }
     }
-  }
-  console.log(`${orangeTeamScore}${blueTeamScore}`)
-  return { orangeTeam: orangeTeamScore, blueTeam: blueTeamScore };
-};
+    console.log(`${orangeTeamScore} x ${blueTeamScore}`);
+    return { orangeTeam: orangeTeamScore, blueTeam: blueTeamScore };
+  };
 
-const handleSimulateGame = async () => {
-  setIsLoading(true);
-  try {
-    const collectionRef = firestore.collection('teams');
-    const orangeRef = collectionRef.doc('orangeID');
-    const blueRef = collectionRef.doc('blueID');
-    
-    const simulate = simulateFootballGame();
-
-    // Atualizar dados para orangeTeam
-    const orangeTeamData = await orangeRef.get();
-    const orangeTeamStats = orangeTeamData.data() as TeamStats;
-
-    if (simulate.orangeTeam > simulate.blueTeam) {
-      // OrangeTeam venceu
-      await orangeRef.update({
-        victory: orangeTeamStats.victory + 1,
-        goals: orangeTeamStats.goals + simulate.orangeTeam,
-      });
-
-      await blueRef.update({
-        defeat: orangeTeamStats.defeat + 1,
-        ownGoals: orangeTeamStats.ownGoals + simulate.blueTeam,
-      });
-    } else if (simulate.orangeTeam < simulate.blueTeam) {
-      // BlueTeam venceu
-      await blueRef.update({
-        victory: orangeTeamStats.victory + 1,
-        goals: orangeTeamStats.goals + simulate.blueTeam,
-      });
-
-      await orangeRef.update({
-        defeat: orangeTeamStats.defeat + 1,
-        ownGoals: orangeTeamStats.ownGoals + simulate.orangeTeam,
-      });
-    } else {
-      // Empate
-      await orangeRef.update({
-        draw: orangeTeamStats.draw + 1,
-        goals: orangeTeamStats.goals + simulate.orangeTeam,
-      });
-
-      await blueRef.update({
-        draw: orangeTeamStats.draw + 1,
-        goals: orangeTeamStats.goals + simulate.blueTeam,
-      });
+  const handleSimulateGame = async () => {
+    setIsLoading(true);
+    try {
+      const collectionRef = firestore.collection('teams');
+      const orangeRef = collectionRef.doc('orangeID');
+      const blueRef = collectionRef.doc('blueID');
+      const simulate = simulateFootballGame();
+      // Atualizar dados para orangeTeam
+      const orangeTeamData = await orangeRef.get();
+      const orangeTeamStats = orangeTeamData.data() as TeamStats;
+      if (simulate.orangeTeam > simulate.blueTeam) {
+        // OrangeTeam venceu
+        await orangeRef.update({
+          victory: orangeTeamStats.victory + 1,
+          goals: orangeTeamStats.goals + simulate.orangeTeam,
+        });
+        await blueRef.update({
+          defeat: orangeTeamStats.defeat + 1,
+          ownGoals: orangeTeamStats.ownGoals + simulate.blueTeam,
+        });
+      } else if (simulate.orangeTeam < simulate.blueTeam) {
+        // BlueTeam venceu
+        await blueRef.update({
+          victory: orangeTeamStats.victory + 1,
+          goals: orangeTeamStats.goals + simulate.blueTeam,
+        });
+        await orangeRef.update({
+          defeat: orangeTeamStats.defeat + 1,
+          ownGoals: orangeTeamStats.ownGoals + simulate.orangeTeam,
+        });
+      } else {
+        // Empate
+        await orangeRef.update({
+          draw: orangeTeamStats.draw + 1,
+          goals: orangeTeamStats.goals + simulate.orangeTeam,
+        });
+        await blueRef.update({
+          draw: orangeTeamStats.draw + 1,
+          goals: orangeTeamStats.goals + simulate.blueTeam,
+        });
+      }
+      setLastResultOrange(simulate.orangeTeam);
+      setLastResultBlue(simulate.blueTeam)
+    } catch (error) {
+      console.error('Erro ao simular jogo: ', error);
     }
-  } catch (error) {
-    console.error('Erro ao simular jogo: ', error);
-    setErrorMessage('Erro ao simular jogo');
-    setAlert(true);
-    setTimeout(() => {
-      setAlert(false);
-      setErrorMessage('');
-    }, 3000);
-  }
-  setIsLoading(false);
-};
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     const collectionRef = firestore.collection('teams');
@@ -189,6 +196,30 @@ const handleSimulateGame = async () => {
   }, []);
 
   useEffect(() => {
+    // Calcula a probabilidade de vitória com base nos dados de cada time
+    if (teams.length === 2) {
+      const orangeTeamTotalMatches = teams[1].victory + teams[1].defeat;
+      const blueTeamTotalMatches = teams[0].victory + teams[0].defeat;
+      const orangeTeamProbability =
+        (teams[1].victory / orangeTeamTotalMatches) * 100;
+      const blueTeamProbability = 100 - orangeTeamProbability;
+      // Adicione uma variável para a quantidade total de gols
+      const totalGoals = teams.reduce((total, team) => total + team.goals, 0);
+      // Calcula a probabilidade com base na quantidade total de gols
+      const orangeTeamGolProbability = (teams[1].goals / totalGoals) * 100;
+      const blueTeamGolProbability = (teams[0].goals / totalGoals) * 100;
+      // Pondera a probabilidade com base nos gols marcados
+      const finalOrangeProbability =
+        (orangeTeamProbability + orangeTeamGolProbability) / 2;
+      const finalBlueProbability =
+        (blueTeamProbability + blueTeamGolProbability) / 2;
+      // Atualiza os estados com as probabilidades
+      setOrangeProbability(finalOrangeProbability);
+      setBlueProbability(finalBlueProbability);
+    }
+  }, [teams]);
+
+  useEffect(() => {
     const storedOrangeTeam = localStorage.getItem('orangeTeam') || '';
     const storedBlueTeam = localStorage.getItem('blueTeam') || '';
     setInputOrange(storedOrangeTeam);
@@ -207,6 +238,11 @@ const handleSimulateGame = async () => {
         setInputBlue,
         teams,
         handleSimulateGame,
+        orangeProbability,
+        blueProbability,
+        lastResultOrange,
+        lastResultBlue,
+        isLoading,
       }}
     >
       {children}
