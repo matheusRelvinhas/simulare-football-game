@@ -103,7 +103,7 @@ const Main: React.FC = () => {
           </div>
         </div>
       </div>
-      <button className="btn-conteiner" onClick={handleSimulateGame}>
+      <button className="btn-conteiner" onClick={handleSimulateGame} disabled={isLoading}>
         <a className="btn-content">
           <span className="btn-title">PLAY</span>
           <span className="icon-arrow">
