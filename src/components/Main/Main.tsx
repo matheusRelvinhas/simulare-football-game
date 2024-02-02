@@ -20,9 +20,7 @@ const Main: React.FC = () => {
 
   return (
     <main className="main">
-      {isLoading && (
-        <div className="loader"></div>
-      )}
+      {isLoading && <div className="loader"></div>}
       <span className="main-span">{`${lastResultOrange}     -     ${lastResultBlue}`}</span>
       <div className="card-container">
         <div className="card">
@@ -39,7 +37,11 @@ const Main: React.FC = () => {
                 />
               </picture>
             </figure>
-            <span>{`${orangeProbability.toFixed(2)}%`}</span>
+            <span>
+              {Number.isNaN(orangeProbability)
+                ? '50.00%'
+                : `${orangeProbability.toFixed(2)}%`}
+            </span>
           </div>
           <div className="second-content">
             <div>
@@ -59,7 +61,11 @@ const Main: React.FC = () => {
               <span>{teams[1]?.draw}</span>
             </div>
             <div>
-              <span>{`${orangeProbability.toFixed(2)}%`}</span>
+              <span>
+                {Number.isNaN(orangeProbability)
+                  ? '50.00%'
+                  : `${orangeProbability.toFixed(2)}%`}
+              </span>
             </div>
           </div>
         </div>
@@ -78,7 +84,11 @@ const Main: React.FC = () => {
                 />
               </picture>
             </figure>
-            <span>{`${blueProbability.toFixed(2)}%`}</span>
+            <span>
+              {Number.isNaN(blueProbability)
+                ? '50.00%'
+                : `${blueProbability.toFixed(2)}%`}
+            </span>
           </div>
           <div className="second-content">
             <div>
@@ -98,12 +108,20 @@ const Main: React.FC = () => {
               <span>{teams[0]?.draw}</span>
             </div>
             <div>
-              <span>{`${blueProbability.toFixed(2)}%`}</span>
+              <span>
+                {Number.isNaN(blueProbability)
+                  ? '50.00%'
+                  : `${blueProbability.toFixed(2)}%`}
+              </span>
             </div>
           </div>
         </div>
       </div>
-      <button className="btn-conteiner" onClick={handleSimulateGame} disabled={isLoading}>
+      <button
+        className="btn-conteiner"
+        onClick={handleSimulateGame}
+        disabled={isLoading}
+      >
         <a className="btn-content">
           <span className="btn-title">PLAY</span>
           <span className="icon-arrow">

@@ -12,6 +12,7 @@ const Header: React.FC = () => {
     setInputOrange,
     inputBlue,
     setInputBlue,
+    handleReset,
   } = useGlobalContext();
 
   const getReady = async () => {
@@ -79,6 +80,12 @@ const Header: React.FC = () => {
               </picture>
             </figure>
           </div>
+        </div>
+        <div className="buttons reset-buttons">
+          <button className="btn" onClick={handleReset}>
+            <span></span>
+            <p data-start="Good Luck!" data-text="Reseted" data-title="Reset"></p>
+          </button>
         </div>
         <div className="buttons">
           <button className="btn" onClick={getReady}>

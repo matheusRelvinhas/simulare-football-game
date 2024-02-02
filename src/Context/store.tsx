@@ -34,6 +34,7 @@ interface ContextProps {
     victory: number;
   }[];
   handleSimulateGame: () => void;
+  handleReset: () => void;
   orangeProbability: number;
   blueProbability: number;
   lastResultOrange: number;
@@ -51,6 +52,7 @@ const GlobalContext = createContext<ContextProps>({
   setInputBlue: () => {},
   teams: [],
   handleSimulateGame: () => {},
+  handleReset: () => {},
   orangeProbability: 50,
   blueProbability: 50,
   lastResultOrange: 0,
@@ -155,6 +157,31 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
+  const handleReset = async () => {
+    try {
+      const collectionRef = firestore.collection('teams');
+      const orangeRef = collectionRef.doc('orangeID');
+      const blueRef = collectionRef.doc('blueID');
+      // Zere os valores para 0
+      await orangeRef.update({
+        defeat: 0,
+        draw: 0,
+        goals: 0,
+        ownGoals: 0,
+        victory: 0,
+      });
+      await blueRef.update({
+        defeat: 0,
+        draw: 0,
+        goals: 0,
+        ownGoals: 0,
+        victory: 0,
+      });
+    } catch (error) {
+      console.error('Erro ao reiniciar dados: ', error);
+    }
+  };
+
   useEffect(() => {
     const collectionRef = firestore.collection('teams');
     const unsubscribe = collectionRef.onSnapshot((snapshot) => {
@@ -229,6 +256,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         lastResultOrange,
         lastResultBlue,
         isLoading,
+        handleReset,
       }}
     >
       {children}

@@ -182,6 +182,10 @@
   border-radius: 3px;
 }
 
+.reset-buttons button {
+  background-color: #d48806;
+}
+
 .buttons button:before, .buttons button:after {
   content: "";
   position: absolute;
@@ -189,6 +193,10 @@
   height: 2px;
   background-color: #237804;
   transition: all 0.3s cubic-bezier(0.35, 0.1, 0.25, 1);
+}
+
+.reset-buttons button:before, .reset-buttons button:after {
+  background-color: #ad6800;
 }
 
 .buttons button:before {
@@ -220,6 +228,12 @@
   height: 0;
   background-color: #237804;
   transition: all 0.3s cubic-bezier(0.35, 0.1, 0.25, 1);
+}
+
+.reset-buttons button span:before, .reset-buttons button span:after {
+
+  background-color: #ad6800;
+
 }
 
 .buttons button span:before {
