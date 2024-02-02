@@ -220,8 +220,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   }, [teams]);
 
   useEffect(() => {
-    const storedOrangeTeam = localStorage.getItem('orangeTeam') || '';
-    const storedBlueTeam = localStorage.getItem('blueTeam') || '';
+    const storedOrangeTeam = localStorage.getItem('orangeTeam') || 'Orange Team';
+    const storedBlueTeam = localStorage.getItem('blueTeam') || 'Blue Team';
     setInputOrange(storedOrangeTeam);
     setInputBlue(storedBlueTeam);
   }, []);
